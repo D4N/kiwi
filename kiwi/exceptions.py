@@ -778,3 +778,9 @@ class KiwiDecodingError(KiwiError):
     """
     Exception is raised on decoding literals failure
     """
+
+
+class KiwiBuildahError(KiwiError):
+    """
+    Exception raised on inconsistent buildah class calls
+    """
