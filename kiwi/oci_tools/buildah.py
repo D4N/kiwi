@@ -250,7 +250,6 @@ class OCIBuildah(OCIBase):
             )
 
         if 'entry_command' in oci_config:
-            # TODO clear command is possible/needed?
             arguments.append('--entrypoint=[{0}]'.format(
                 ','.join(
                     ['"{0}"'.format(x) for x in oci_config['entry_command']]
@@ -258,7 +257,6 @@ class OCIBuildah(OCIBase):
             ))
 
         if 'entry_subcommand' in oci_config:
-            # TODO: clear subcommand is possible/needed?
             arguments.append('--cmd={0}'.format(
                 ' '.join(oci_config['entry_subcommand'])
             ))
