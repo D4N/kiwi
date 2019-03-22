@@ -18,6 +18,7 @@
 import glob
 import os
 import platform
+import stat
 from collections import OrderedDict
 from collections import namedtuple
 from tempfile import NamedTemporaryFile
@@ -864,11 +865,20 @@ class SystemSetup(object):
                 ]
             )
 
+    @staticmethod
+    def _is_file_executable(file_name):
+        """ Return true when the owner of the file can execute it """
+        return (stat.S_IMODE(os.stat(file_name).st_mode) & stat.S_IXUSR) \
+            == stat.S_IXUSR
+
     def _call_script(self, name):
-        if os.path.exists(self.root_dir + '/image/' + name):
-            config_script = Command.call(
-                ['chroot', self.root_dir, 'bash', '/image/' + name]
-            )
+        script_path = os.path.join(self.root_dir, 'image', name)
+        if os.path.exists(script_path):
+            command = ['chroot', self.root_dir]
+            if not self._is_file_executable(script_path):
+                command += ['bash']
+            command += ['/image/' + name]
+            config_script = Command.call(command)
             process = CommandProcess(
                 command=config_script, log_topic='Calling ' + name + ' script'
             )
